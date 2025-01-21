@@ -1,9 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pl-PL">
+<html lang="pl-PL" xmlns="http://www.w3.org/1999/html">
 <head lang="pl">
+    <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8">
-
     <!--Page Title-->
     <title>{% block title %}Nazwa Strony{% endblock %}</title>
 
@@ -31,7 +31,6 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
 </head>
 <body>
-
 <!-- Preloader -->
 <div id="preloader">
     <div id="status" class="la-ball-triangle-path">
@@ -80,18 +79,13 @@
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" title="Twitter" href="http://www.twitter.com/username">
-                                    <i class="fa fa-twitter fa-1x"></i><span>Twitter</span>
+                                <a target="_blank" title="X" href="http://www.twitter.com/username">
+                                    <i class="fa fa-twitter fa-1x"></i><span>X</span>
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" title="Instagram" href="http://www.instagram.com/username">
                                     <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" title="behance" href="http://www.behance.net">
-                                    <i class="fa fa-behance fa-1x"></i><span>Behance</span>
                                 </a>
                             </li>
                         </ul>
@@ -103,13 +97,13 @@
                     <nav id="nav-main">
                         <ul>
                             <li>
-                                <a href="#banner">Home</a>
+                                <a href="#banner">Strona główna</a>
                             </li>
                             <li>
-                                <a href="#about">About</a>
+                                <a href="#about">O nas</a>
                             </li>
                             <li>
-                                <a href="#gallery">Gallery</a>
+                                <a href="#gallery">Galeria</a>
                             </li>
                             <li>
                                 <a href="#services">Services</a>
@@ -140,9 +134,84 @@
             <div class="col-38">
 
                 <div class="section-heading">
-                    <h1>A FREE AND SIMPLE LANDING PAGE</h1>
-                    <h2>Namari is a free landing page template you can use for your projects. It is free to use for your
-                        personal and commercial projects, enjoy!</h2>
+                    <h1>TUUU COŚ BĘDZIE</h1>
+                    <h2>Tu coś będzie</h2>
+                </div>
+
+                <div>
+                    {{ convention.name }}
+
+                    {% if status %}
+                        <p>{{ status }}</p>
+
+                        {% if status == 'Konwent właśnie trwa' %}
+                            <p>Konwent zakończy się za:
+                                <span id="time_to_end" data-endtime="{{ timestamp_end }}">
+                    <div class="flex gap-5">
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="days_end"></span>
+                            </span>
+                            dni
+                        </div>
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="hours_end"></span>
+                            </span>
+                            godziny
+                        </div>
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="minutes_end"></span>
+                            </span>
+                            minuty
+                        </div>
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="seconds_end"></span>
+                            </span>
+                            sekundy
+                        </div>
+                    </div>
+                </span>
+                            </p>
+
+                        {% elif status == 'Konwent jeszcze się nie rozpoczął' %}
+                            <p>Konwent rozpocznie się za:
+                                <span id="time_to_start" data-starttime="{{ timestamp_start }}">
+                    <div class="flex gap-5">
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="days_start"></span>
+                            </span>
+                            dni
+                        </div>
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="hours_start"></span>
+                            </span>
+                            godziny
+                        </div>
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="minutes_start"></span>
+                            </span>
+                            minuty
+                        </div>
+                        <div>
+                            <span class="countdown font-mono text-4xl">
+                                <span id="seconds_start"></span>
+                            </span>
+                            sekundy
+                        </div>
+                    </div>
+                </span>
+                            </p>
+                        {% endif %}
+
+                    {% else %}
+                        <p>Nowe informacje wkrótce!</p>
+                    {% endif %}
                 </div>
 
                 <!--Call to Action-->
@@ -165,9 +234,15 @@
                 <div class="col-3">
                     <div class="section-heading">
                         <h3>SUCCESS</h3>
-                        <h2 class="section-title">How We Help You To Sell Your Product</h2>
-                        <p class="section-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam!</p>
+                        <h2 class="section-title">Coś o was może???</h2>
+                        <p class="section-subtitle">Bla bla bla bla bla bla bla bla bla bla bla 
+                            bla bla bla bla bla bla bla bla
+                            bla bla bla bla bla bla bla bla bla
+                            bla bla bla bla bla bla bla bla bla
+                            bla bla bla bla bla bla bla bla bla
+                            bla bla bla bla bla bla bla bla bla
+                            bla bla bla bla bla bla bla bla bla
+                        </p>
                     </div>
 
                 </div>
@@ -178,11 +253,11 @@
                     <div class="col-2 icon-block icon-top wow fadeInUp" data-wow-delay="0.1s">
                         <!--Icon-->
                         <div class="icon">
-                            <i class="fa fa-html5 fa-2x"></i>
+                            <i class="fa fa-gamepad fa-2x"></i>
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>HTML5 &amp; CSS3</h4>
+                            <h4>Coś tu?</h4>
                             <p>Has ne tritani atomorum conclusionemque, in dolorum volumus cotidieque eum. At vis choro
                                 neglegentur iudico</p>
                         </div>
@@ -197,7 +272,7 @@
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>Easy to Use</h4>
+                            <h4>I tu!</h4>
                             <p>Cu vero ipsum vim, doctus facilisi sea in. Eam ex falli honestatis repudiandae, sit
                                 detracto mediocrem disputationi</p>
                         </div>
@@ -212,7 +287,7 @@
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>Fully Responsive</h4>
+                            <h4>Tutaj również!</h4>
                             <p>Id porro tritani recusabo usu, eum intellegam consequuntur et. Fugit debet ea sit, an pro
                                 nemore vivendum</p>
                         </div>
@@ -227,7 +302,7 @@
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>Parallax Effect</h4>
+                            <h4>No i tutaj też można!</h4>
                             <p>Id porro tritani recusabo usu, eum intellegam consequuntur et. Fugit debet ea sit, an pro
                                 nemore vivendum</p>
                         </div>
@@ -337,7 +412,7 @@
 
                 <div class="section-heading">
                     <h3>FEEDBACK</h3>
-                    <h2 class="section-title">What our customers are saying</h2>
+                    <h2 class="section-title">Tu możecie napisać coś o was jako o zarządzie może?</h2>
                 </div>
 
                 <!--User Testimonial-->
@@ -383,7 +458,7 @@
 
                     <div class="section-heading">
                         <h3>TRUST</h3>
-                        <h2 class="section-title">Companies who use our services</h2>
+                        <h2 class="section-title">Nie wiem co tu można byłoby dać, ewentualnie można to wywalić?</h2>
                         <p class="section-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                             eiusmod
                             tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam!</p>
@@ -402,7 +477,7 @@
                         <div class="client-overlay"><span>Fingerprint</span></div>
                     </a>
                     <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo3.png' %}"" alt="Company"/>
+                        <img src="{% static 'images/company-images/company-logo3.png' %}" alt="Company"/>
                         <div class="client-overlay"><span>The Man</span></div>
                     </a>
                     <a href="#" class="col-3">
@@ -531,8 +606,8 @@
                     </a>
                 </li>
                 <li>
-                    <a target="_blank" title="Twitter" href="http://www.twitter.com/username">
-                        <i class="fa fa-twitter fa-1x"></i><span>Twitter</span>
+                    <a target="_blank" title="X" href="http://www.twitter.com/username">
+                        <i class="fa fa-twitter fa-1x"></i><span>X</span>
                     </a>
                 </li>
                 <li>
@@ -540,33 +615,31 @@
                         <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
                     </a>
                 </li>
-                <li>
-                    <a target="_blank" title="behance" href="http://www.behance.net">
-                        <i class="fa fa-behance fa-1x"></i><span>Behance</span>
-                    </a>
-                </li>
             </ul>
             <!--End of Social Icons in Footer-->
         </div>
+
+
     </footer>
     <!--End of Footer-->
 
 </div>
 
 <!-- Include JavaScript resources -->
-<script src="{% static 'js/jquery.1.8.3.min.js' %}"></script>
-<script src="{% static 'js/wow.min.js' %}"></script>
-<script src="{% static 'js/featherlight.min.js' %}"></script>
-<script src="{% static 'js/featherlight.gallery.min.js' %}"></script>
-<script src="{% static 'js/jquery.enllax.min.js' %}"></script>
-<script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
-<script src="{% static 'js/jquery.easing.min.js' %}"></script>
-<script src="{% static 'js/jquery.stickyNavbar.min.js' %}"></script>
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/images-loaded.min.js' %}"></script>
-<script src="{% static 'js/lightbox.min.js' %}"></script>
-<script src="{% static 'js/site.js' %}"></script>
 
+<script src="{% static 'js/jquery.1.8.3.min.js' %}" defer></script>
+<script src="{% static 'js/wow.min.js' %}" defer></script>
+<script src="{% static 'js/featherlight.min.js' %}" defer></script>
+<script src="{% static 'js/featherlight.gallery.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.enllax.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.scrollUp.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.easing.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.stickyNavbar.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}" defer></script>
+<script src="{% static 'js/images-loaded.min.js' %}" defer></script>
+<script src="{% static 'js/lightbox.min.js' %}" defer></script>
+<script src="{% static 'js/site.js' %}" defer></script>
+<script src="{% static 'js/counter.js' %}" defer></script>
 
 </body>
 </html>
