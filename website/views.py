@@ -1,4 +1,3 @@
-from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
@@ -21,14 +20,15 @@ class IndexView(View):
             }
             return render(request, 'index.html', context)
 
+        status = 'Nowe informacje wkrótce!'
         timestamp_start = None
         timestamp_end = None
 
         if convention.start_date < now <= convention.end_date:
-            status = 'Konwent właśnie trwa'
+            status = 'Wydarzenie właśnie trwa'
             timestamp_end = int(convention.end_date.timestamp() * 1000)
         elif now < convention.start_date:
-            status = 'Konwent jeszcze się nie rozpoczął'
+            status = 'Wydarzenie jeszcze się nie rozpoczęło'
             timestamp_start = int(convention.start_date.timestamp() * 1000)
 
 

@@ -1,3 +1,8 @@
+
+
+// Nie ruszać bo umrze!!!
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const endElement = document.getElementById('time_to_end');
     const startElement = document.getElementById('time_to_start');
@@ -45,3 +50,4 @@ function startCountdown(endTime, type) {
 
     const interval = setInterval(updateCountdown, 1000);
 }
+
