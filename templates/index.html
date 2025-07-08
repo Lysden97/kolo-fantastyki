@@ -21,9 +21,6 @@
     <!-- Namari Color CSS -->
     <link rel="stylesheet" href="{% static 'css/namari-color.css' %}">
 
-    <!--Icon Fonts - Font Awesome Icons-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <!-- Animate CSS-->
     <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css">
 
@@ -48,22 +45,25 @@
     <div class="left-border wow fadeInLeft animated" style="visibility: visible; animation-name: fadeInLeft;"></div>
 </div>
 
-<div id="wrapper">
 
+<div id="wrapper">
     <header id="banner" class="scrollto clearfix" data-enllax-ratio=".5">
+    <div id="banner-container">
+        <img src="{% static 'images/baner_kfiguw1.png' %}" id="banner-logo" alt="Landing Page"/>
+    </div>
         <div id="header" class="nav-collapse">
             <div class="row clearfix">
                 <div class="col-1">
-
-                    <!--Logo-->
+                    
+                    
+{#                    <!--Logo-->#}
                     <div id="logo">
-
-                        <!--Logo that is shown on the banner-->
-                        <img src="{% static 'images/logo.png' %}" id="banner-logo" alt="Landing Page"/>
-                        <!--End of Banner Logo-->
+{#                        <!--Logo that is shown on the banner-->#}
+{#                        <img src="{% static 'images/baner_kfiguw1.png' %}" id="banner-logo" alt="Landing Page"/>#}
+{#                        <!--End of Banner Logo-->#}
 
                         <!--The Logo that is shown on the sticky Navigation Bar-->
-                        <img src="{% static 'images/logo-2.png' %}" id="navigation-logo" alt="Landing Page"/>
+{#                        <img src="{% static 'images/baner_kfiguw1.png' %}" id="navigation-logo" alt="Landing Page"/>#}
                         <!--End of Navigation Logo-->
 
                     </div>
@@ -74,17 +74,17 @@
                         <!--Social Icons in Header-->
                         <ul class="social-icons">
                             <li>
-                                <a target="_blank" title="Facebook" href="https://www.facebook.com/username">
+                                <a target="_blank" title="Facebook" href="https://www.facebook.com/KoloFantastykiIGier/">
                                     <i class="fa fa-facebook fa-1x"></i><span>Facebook</span>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" title="X" href="http://www.twitter.com/username">
-                                    <i class="fa fa-twitter fa-1x"></i><span>X</span>
+                                <a target="_blank" title="Discord" href="https://discord.com/invite/MDqn8Z7ba2">
+                                    <i class="fa-brands fa-discord"></i><span>Discord</span>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" title="Instagram" href="http://www.instagram.com/username">
+                                <a target="_blank" title="Instagram" href="https://www.instagram.com/kolo_fantastyki_i_gier_uw/">
                                     <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
                                 </a>
                             </li>
@@ -134,8 +134,8 @@
             <div class="col-38">
 
                 <div class="section-heading">
-                    <h1>TUUU COŚ BĘDZIE</h1>
-                    <h2>Tu coś będzie</h2>
+                    <h1>NADCHODZĄCE WYDARZENIA</h1>
+                    <h2>Zobacz co dla Was przygotowaliśmy</h2>
                 </div>
 
                 <div>
@@ -144,7 +144,7 @@
                     {% if status %}
                         <p>{{ status }}</p>
 
-                        {% if status == 'Konwent właśnie trwa' %}
+                        {% if status == 'Wydarzenie właśnie trwa' %}
                             <p>Konwent zakończy się za:
                                 <span id="time_to_end" data-endtime="{{ timestamp_end }}">
                     <div class="flex gap-5">
@@ -176,8 +176,8 @@
                 </span>
                             </p>
 
-                        {% elif status == 'Konwent jeszcze się nie rozpoczął' %}
-                            <p>Konwent rozpocznie się za:
+                        {% elif status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
+                            <p>Wydarzenie rozpocznie się za:
                                 <span id="time_to_start" data-starttime="{{ timestamp_start }}">
                     <div class="flex gap-5">
                         <div>
@@ -214,9 +214,11 @@
                     {% endif %}
                 </div>
 
+            {% if status == 'Wydarzenie właśnie trwa' or status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
                 <!--Call to Action-->
-                <a href="#" class="button">START CREATING TODAY</a>
+                <a href="#" class="button">Link do wydarzenia</a>
                 <!--End Call to Action-->
+            {% endif %}
 
             </div>
 
@@ -512,81 +514,81 @@
         </section>
         <!--End of Clients-->
 
-        <!--Pricing Tables-->
-        <section id="pricing" class="secondary-color text-center scrollto clearfix ">
-            <div class="row clearfix">
-
-                <div class="section-heading">
-                    <h3>YOUR CHOICE</h3>
-                    <h2 class="section-title">We have the right package for you</h2>
-                </div>
-
-                <!--Pricing Block-->
-                <div class="pricing-block col-3 wow fadeInUp" data-wow-delay="0.4s">
-                    <div class="pricing-block-content">
-                        <h3>Personal</h3>
-                        <p class="pricing-sub">The standard version</p>
-                        <div class="pricing">
-                            <div class="price"><span>$</span>19</div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                        </div>
-                        <ul>
-                            <li>5 Downloads</li>
-                            <li>2 Extensions</li>
-                            <li>Tutorials</li>
-                            <li>Forum Support</li>
-                            <li>1 year free updates</li>
-                        </ul>
-                        <a href="#" class="button">BUY TODAY</a>
-                    </div>
-                </div>
-                <!--End Pricing Block-->
-
-                <!--Pricing Block-->
-                <div class="pricing-block featured col-3 wow fadeInUp" data-wow-delay="0.6s">
-                    <div class="pricing-block-content">
-                        <h3>Student</h3>
-                        <p class="pricing-sub">Most popular choice</p>
-                        <div class="pricing">
-                            <div class="price"><span>$</span>29</div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                        </div>
-                        <ul>
-                            <li>15 Downloads</li>
-                            <li>5 Extensions</li>
-                            <li>Tutorials with Files</li>
-                            <li>Forum Support</li>
-                            <li>2 years free updates</li>
-                        </ul>
-                        <a href="#" class="button">BUY TODAY</a>
-                    </div>
-                </div>
-                <!--End Pricing Block-->
-
-                <!--Pricing Block-->
-                <div class="pricing-block col-3 wow fadeInUp" data-wow-delay="0.8s">
-                    <div class="pricing-block-content">
-                        <h3>Business</h3>
-                        <p class="pricing-sub">For the whole team</p>
-                        <div class="pricing">
-                            <div class="price"><span>$</span>49</div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                        </div>
-                        <ul>
-                            <li>Unlimited Downloads</li>
-                            <li>Unlimited Extensions</li>
-                            <li>HD Video Tutorials</li>
-                            <li>Chat Support</li>
-                            <li>Lifetime free updates</li>
-                        </ul>
-                        <a href="#" class="button">BUY TODAY</a>
-                    </div>
-                </div>
-                <!--End Pricing Block-->
-
-            </div>
-        </section>
-        <!--End of Pricing Tables-->
+{#        <!--Pricing Tables-->#}
+{#        <section id="pricing" class="secondary-color text-center scrollto clearfix ">#}
+{#            <div class="row clearfix">#}
+{##}
+{#                <div class="section-heading">#}
+{#                    <h3>YOUR CHOICE</h3>#}
+{#                    <h2 class="section-title">We have the right package for you</h2>#}
+{#                </div>#}
+{##}
+{#                <!--Pricing Block-->#}
+{#                <div class="pricing-block col-3 wow fadeInUp" data-wow-delay="0.4s">#}
+{#                    <div class="pricing-block-content">#}
+{#                        <h3>Personal</h3>#}
+{#                        <p class="pricing-sub">The standard version</p>#}
+{#                        <div class="pricing">#}
+{#                            <div class="price"><span>$</span>19</div>#}
+{#                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>#}
+{#                        </div>#}
+{#                        <ul>#}
+{#                            <li>5 Downloads</li>#}
+{#                            <li>2 Extensions</li>#}
+{#                            <li>Tutorials</li>#}
+{#                            <li>Forum Support</li>#}
+{#                            <li>1 year free updates</li>#}
+{#                        </ul>#}
+{#                        <a href="#" class="button">BUY TODAY</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <!--End Pricing Block-->#}
+{##}
+{#                <!--Pricing Block-->#}
+{#                <div class="pricing-block featured col-3 wow fadeInUp" data-wow-delay="0.6s">#}
+{#                    <div class="pricing-block-content">#}
+{#                        <h3>Student</h3>#}
+{#                        <p class="pricing-sub">Most popular choice</p>#}
+{#                        <div class="pricing">#}
+{#                            <div class="price"><span>$</span>29</div>#}
+{#                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>#}
+{#                        </div>#}
+{#                        <ul>#}
+{#                            <li>15 Downloads</li>#}
+{#                            <li>5 Extensions</li>#}
+{#                            <li>Tutorials with Files</li>#}
+{#                            <li>Forum Support</li>#}
+{#                            <li>2 years free updates</li>#}
+{#                        </ul>#}
+{#                        <a href="#" class="button">BUY TODAY</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <!--End Pricing Block-->#}
+{##}
+{#                <!--Pricing Block-->#}
+{#                <div class="pricing-block col-3 wow fadeInUp" data-wow-delay="0.8s">#}
+{#                    <div class="pricing-block-content">#}
+{#                        <h3>Business</h3>#}
+{#                        <p class="pricing-sub">For the whole team</p>#}
+{#                        <div class="pricing">#}
+{#                            <div class="price"><span>$</span>49</div>#}
+{#                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>#}
+{#                        </div>#}
+{#                        <ul>#}
+{#                            <li>Unlimited Downloads</li>#}
+{#                            <li>Unlimited Extensions</li>#}
+{#                            <li>HD Video Tutorials</li>#}
+{#                            <li>Chat Support</li>#}
+{#                            <li>Lifetime free updates</li>#}
+{#                        </ul>#}
+{#                        <a href="#" class="button">BUY TODAY</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <!--End Pricing Block-->#}
+{##}
+{#            </div>#}
+{#        </section>#}
+{#        <!--End of Pricing Tables-->#}
 
     </main>
     <!--End Main Content Area-->
@@ -596,22 +598,22 @@
     <footer id="landing-footer" class="clearfix">
         <div class="row clearfix">
 
-            <p id="copyright" class="col-2">Made with love by <a href="https://www.shapingrain.com">ShapingRain</a></p>
+            <p id="copyright" class="col-2">Made with love by POLAK</p>
 
             <!--Social Icons in Footer-->
             <ul class="col-2 social-icons">
                 <li>
-                    <a target="_blank" title="Facebook" href="https://www.facebook.com/username">
+                    <a target="_blank" title="Facebook" href="https://www.facebook.com/KoloFantastykiIGier/">
                         <i class="fa fa-facebook fa-1x"></i><span>Facebook</span>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank" title="X" href="http://www.twitter.com/username">
-                        <i class="fa fa-twitter fa-1x"></i><span>X</span>
+                    <a target="_blank" title="Discord" href="https://discord.com/invite/MDqn8Z7ba2">
+                        <i class="fa-brands fa-discord"></i><span>Discord</span>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank" title="Instagram" href="http://www.instagram.com/username">
+                    <a target="_blank" title="Instagram" href="https://www.instagram.com/kolo_fantastyki_i_gier_uw/">
                         <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
                     </a>
                 </li>
@@ -640,6 +642,7 @@
 <script src="{% static 'js/lightbox.min.js' %}" defer></script>
 <script src="{% static 'js/site.js' %}" defer></script>
 <script src="{% static 'js/counter.js' %}" defer></script>
+<script src="https://kit.fontawesome.com/4913fdb7d2.js" crossorigin="anonymous"></script>
 
 </body>
 </html>
