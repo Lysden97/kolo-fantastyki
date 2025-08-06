@@ -5,7 +5,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8">
     <!--Page Title-->
-    <title>{% block title %}Nazwa Strony{% endblock %}</title>
+    <title>{% block title %}Koło Fantastyki i Gier Uniwersytetu Warszawskiego{% endblock %}</title>
 
     <!--Meta Keywords and Description-->
     <meta name="keywords" content="">
@@ -48,33 +48,19 @@
 
 <div id="wrapper">
     <header id="banner" class="scrollto clearfix" data-enllax-ratio=".5">
-    <div id="banner-container">
-        <img src="{% static 'images/baner_kfiguw1.png' %}" id="banner-logo" alt="Landing Page"/>
-    </div>
+        <div id="banner-container">
+            <img src="{% static 'images/baner_kfiguw1.png' %}" id="banner-logo" alt="Landing Page"/>
+        </div>
         <div id="header" class="nav-collapse">
             <div class="row clearfix">
                 <div class="col-1">
-                    
-                    
-{#                    <!--Logo-->#}
-                    <div id="logo">
-{#                        <!--Logo that is shown on the banner-->#}
-{#                        <img src="{% static 'images/baner_kfiguw1.png' %}" id="banner-logo" alt="Landing Page"/>#}
-{#                        <!--End of Banner Logo-->#}
-
-                        <!--The Logo that is shown on the sticky Navigation Bar-->
-{#                        <img src="{% static 'images/baner_kfiguw1.png' %}" id="navigation-logo" alt="Landing Page"/>#}
-                        <!--End of Navigation Logo-->
-
-                    </div>
-                    <!--End of Logo-->
 
                     <aside>
-
                         <!--Social Icons in Header-->
                         <ul class="social-icons">
                             <li>
-                                <a target="_blank" title="Facebook" href="https://www.facebook.com/KoloFantastykiIGier/">
+                                <a target="_blank" title="Facebook"
+                                   href="https://www.facebook.com/KoloFantastykiIGier/">
                                     <i class="fa fa-facebook fa-1x"></i><span>Facebook</span>
                                 </a>
                             </li>
@@ -84,7 +70,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" title="Instagram" href="https://www.instagram.com/kolo_fantastyki_i_gier_uw/">
+                                <a target="_blank" title="Instagram"
+                                   href="https://www.instagram.com/kolo_fantastyki_i_gier_uw/">
                                     <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
                                 </a>
                             </li>
@@ -106,16 +93,7 @@
                                 <a href="#gallery">Galeria</a>
                             </li>
                             <li>
-                                <a href="#services">Services</a>
-                            </li>
-                            <li>
-                                <a href="#testimonials">Testimonials</a>
-                            </li>
-                            <li>
-                                <a href="#clients">Clients</a>
-                            </li>
-                            <li>
-                                <a href="#pricing">Pricing</a>
+                                <a href="#testimonials">Zarząd</a>
                             </li>
                         </ul>
                     </nav>
@@ -128,25 +106,22 @@
             </div>
         </div><!--End of Header-->
 
-        <!--Banner Content-->
-        <div id="banner-content" class="row clearfix">
 
-            <div class="col-38">
+        <div class="flex flex-col items-center justify-center pt-20">
+            {% if convention.name is not None %}
+                <h1 class="convention-name">{{ convention.name }}</h1>
+            {% endif %}
+            {% if status %}
+                {% if convention.name %}
+                    <h2 class="convention-text">{{ status }}</h2>
+                {% else %}
+                    <h1 class="convention-name">{{ status }}</h1>
+                {% endif %}
 
-                <div class="section-heading">
-                    <h1>NADCHODZĄCE WYDARZENIA</h1>
-                    <h2>Zobacz co dla Was przygotowaliśmy</h2>
-                </div>
 
-                <div>
-                    {{ convention.name }}
-
-                    {% if status %}
-                        <p>{{ status }}</p>
-
-                        {% if status == 'Wydarzenie właśnie trwa' %}
-                            <p>Konwent zakończy się za:
-                                <span id="time_to_end" data-endtime="{{ timestamp_end }}">
+                {% if status == 'Wydarzenie właśnie trwa' %}
+                    <h2>Konwent zakończy się za:</h2>
+                    <span id="time_to_end" data-endtime="{{ timestamp_end }}">
                     <div class="flex gap-5">
                         <div>
                             <span class="countdown font-mono text-4xl">
@@ -174,11 +149,11 @@
                         </div>
                     </div>
                 </span>
-                            </p>
+                    </p>
 
-                        {% elif status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
-                            <p>Wydarzenie rozpocznie się za:
-                                <span id="time_to_start" data-starttime="{{ timestamp_start }}">
+                {% elif status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
+                    <h2>Wydarzenie rozpocznie się za:</h2>
+                    <span id="time_to_start" data-starttime="{{ timestamp_start }}">
                     <div class="flex gap-5">
                         <div>
                             <span class="countdown font-mono text-4xl">
@@ -206,28 +181,22 @@
                         </div>
                     </div>
                 </span>
-                            </p>
-                        {% endif %}
+                    </p>
+                {% endif %}
 
-                    {% else %}
-                        <p>Nowe informacje wkrótce!</p>
-                    {% endif %}
-                </div>
+            {% endif %}
 
             {% if status == 'Wydarzenie właśnie trwa' or status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
                 <!--Call to Action-->
-                <a href="#" class="button">Link do wydarzenia</a>
+                <a href="{{ convention.link }}" class="button">Link do wydarzenia</a>
                 <!--End Call to Action-->
             {% endif %}
+        </div>
 
-            </div>
-
-        </div><!--End of Row-->
     </header>
 
     <!--Main Content Area-->
     <main id="content">
-
         <!--Introduction-->
         <section id="about" class="introduction scrollto">
 
@@ -235,16 +204,13 @@
 
                 <div class="col-3">
                     <div class="section-heading">
-                        <h3>SUCCESS</h3>
-                        <h2 class="section-title">Coś o was może???</h2>
-                        <p class="section-subtitle">Bla bla bla bla bla bla bla bla bla bla bla 
-                            bla bla bla bla bla bla bla bla
-                            bla bla bla bla bla bla bla bla bla
-                            bla bla bla bla bla bla bla bla bla
-                            bla bla bla bla bla bla bla bla bla
-                            bla bla bla bla bla bla bla bla bla
-                            bla bla bla bla bla bla bla bla bla
-                        </p>
+                        <h3>Kim jesteśmy?</h3>
+                        <h2 class="section-title">O nas</h2>
+                        <p class="section-subtitle">Jesteśmy grupą nerdów, która odnalazła się na największym
+                            uniwersytecie w Polsce! Podstawowym celem KFIG UW jest popularyzacja fantastyki i gier.
+                            Naszą wizją jest stworzenie mikrokosmosu uniwersytetu – pluralistycznej, otwartej
+                            społeczności, w której spotykają się różne środowiska, idee i pasje, połączone wspólnym
+                            zainteresowaniem fantastyką.</p>
                     </div>
 
                 </div>
@@ -259,9 +225,11 @@
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>Coś tu?</h4>
-                            <p>Has ne tritani atomorum conclusionemque, in dolorum volumus cotidieque eum. At vis choro
-                                neglegentur iudico</p>
+                            <h4>Gry</h4>
+                            <p>Jednym z aspektów naszego koła są wszelkiego typu gry, od planszówek i gier
+                                komputerowych, do matematycznych aspektów negocjacji. Osoby chcące tworzyć, podziwiać i
+                                eksploatować wszelkie gry znajdują u nas miejsce dla siebie!
+                            </p>
                         </div>
                     </div>
                     <!--End of Icon Block-->
@@ -274,9 +242,10 @@
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>I tu!</h4>
-                            <p>Cu vero ipsum vim, doctus facilisi sea in. Eam ex falli honestatis repudiandae, sit
-                                detracto mediocrem disputationi</p>
+                            <h4>Wydarzenia</h4>
+                            <p>Nasze koło niestrudzenie organizuje różne, darmowe, wydarzenia mające na celu promować
+                                fantastykę i gry, oraz zwiększać do nich dostępność i zmniejszać bariery wejścia, takie
+                                jak seria minikonwentów "Mimik", czy konwent-konferencja "Lustro".</p>
                         </div>
                     </div>
                     <!--End of Icon Block-->
@@ -289,9 +258,11 @@
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>Tutaj również!</h4>
-                            <p>Id porro tritani recusabo usu, eum intellegam consequuntur et. Fugit debet ea sit, an pro
-                                nemore vivendum</p>
+                            <h4>Społeczność</h4>
+                            <p>Tworzymy zwartą społeczność akademicką, zwłaszcza prężnie działającą na naszym kołowym
+                                Discordzie. Oficjalnie jedynie studenci UW mogą być członkami, lecz prowadzimy również
+                                spis symaptyków koła, a każde nasze wydarzenie jest dostępne i darmowe również dla ludzi
+                                spoza UW!</p>
                         </div>
                     </div>
                     <!--End of Icon Block-->
@@ -304,9 +275,11 @@
                         </div>
                         <!--Icon Block Description-->
                         <div class="icon-block-description">
-                            <h4>No i tutaj też można!</h4>
-                            <p>Id porro tritani recusabo usu, eum intellegam consequuntur et. Fugit debet ea sit, an pro
-                                nemore vivendum</p>
+                            <h4>Ambicje</h4>
+                            <p>Mamy nadzieję na zainspirowanie innych podobnych inicjatyw na Polskich, a w szczególności
+                                Warszawskich, uczelniach wyższych. Koło się ciągle rozrasta i sięga po większe
+                                wydarzenia, na przykład nadchodzący konwent na kampusie głównym UW, o nazwie
+                                "Lustro".</p>
                         </div>
                     </div>
                     <!--End of Icon Block-->
@@ -352,253 +325,46 @@
         </aside>
         <!--End of Gallery-->
 
-
-        <!--Content Section-->
-        <div id="services" class="scrollto clearfix">
-
-            <div class="row no-padding-bottom clearfix">
-
-
-                <!--Content Left Side-->
-                <div class="col-3">
-                    <!--User Testimonial-->
-                    <blockquote class="testimonial text-right bigtest">
-                        <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore
-                            et dolore magna aliqua</q>
-                        <footer>— John Doe, Happy Customer</footer>
-                    </blockquote>
-                    <!-- End of Testimonial-->
-
-                </div>
-                <!--End Content Left Side-->
-
-                <!--Content of the Right Side-->
-                <div class="col-3">
-                    <div class="section-heading">
-                        <h3>BELIEVING</h3>
-                        <h2 class="section-title">Focusing On What Matters Most</h2>
-                        <p class="section-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam!</p>
-                    </div>
-                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
-                        totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
-                        dicta sunt explicabo.
-                    </p>
-                    <p>
-                        Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
-                        consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-                        Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet!
-                    </p>
-                    <!-- Just replace the Video ID "UYJ5IjBRlW8" with the ID of your video on YouTube (Found within the URL) -->
-                    <a href="#" data-videoid="UYJ5IjBRlW8" data-videosite="youtube" class="button video link-lightbox">
-                        WATCH VIDEO <i class="fa fa-play" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <!--End Content Right Side-->
-
-                <div class="col-3">
-                    <img src="{% static 'images/dancer.jpg' %}" alt="Dancer"/>
-                </div>
-
-            </div>
-
-
-        </div>
-        <!--End of Content Section-->
-
-        <!--Testimonials-->
         <aside id="testimonials" class="scrollto text-center" data-enllax-ratio=".2">
 
             <div class="row clearfix">
 
                 <div class="section-heading">
-                    <h3>FEEDBACK</h3>
-                    <h2 class="section-title">Tu możecie napisać coś o was jako o zarządzie może?</h2>
+                    <h3>Reprezentanci</h3>
+                    <h2 class="section-title">Zarząd KFIG</h2>
                 </div>
 
                 <!--User Testimonial-->
                 <blockquote class="col-3 testimonial classic">
                     <img src="{% static 'images/user-images/user-1.jpg' %}" alt="User"/>
-                    <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua</q>
-                    <footer>John Doe - Happy Customer</footer>
+                    <footer>Jakub "Sparrow" Gruszczyński - Prezes</footer>
                 </blockquote>
                 <!-- End of Testimonial-->
 
                 <!--User Testimonial-->
                 <blockquote class="col-3 testimonial classic">
                     <img src="{% static 'images/user-images/user-2.jpg' %}" alt="User"/>
-                    <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua</q>
-                    <footer>Roslyn Doe - Happy Customer</footer>
+                    <footer>Julita "Juliette" Pietroń - Główna organizatorka "Lustra"</footer>
                 </blockquote>
                 <!-- End of Testimonial-->
 
                 <!--User Testimonial-->
                 <blockquote class="col-3 testimonial classic">
                     <img src="{% static 'images/user-images/user-3.jpg' %}" alt="User"/>
-                    <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua</q>
-                    <footer>Thomas Doe - Happy Customer</footer>
+                    <footer>Wojciech Paupa - Wiceprezes</footer>
                 </blockquote>
                 <!-- End of Testimonial-->
 
             </div>
 
         </aside>
-        <!--End of Testimonials-->
-
-        <!--Clients-->
-        <section id="clients" class="scrollto clearfix">
-            <div class="row clearfix">
-
-                <div class="col-3">
-
-                    <div class="section-heading">
-                        <h3>TRUST</h3>
-                        <h2 class="section-title">Nie wiem co tu można byłoby dać, ewentualnie można to wywalić?</h2>
-                        <p class="section-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                            eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam!</p>
-                    </div>
-
-                </div>
-
-                <div class="col-2-3">
-
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo1.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Tree</span></div>
-                    </a>
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo2.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Fingerprint</span></div>
-                    </a>
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo3.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>The Man</span></div>
-                    </a>
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo4.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Mustache</span></div>
-                    </a>
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo5.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Goat</span></div>
-                    </a>
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo6.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Justice</span></div>
-                    </a>
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo7.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Ball</span></div>
-                    </a>
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo8.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Cold</span></div>
-                    </a>
-
-                    <a href="#" class="col-3">
-                        <img src="{% static 'images/company-images/company-logo9.png' %}" alt="Company"/>
-                        <div class="client-overlay"><span>Cold</span></div>
-                    </a>
-
-                </div>
-
-            </div>
-        </section>
-        <!--End of Clients-->
-
-{#        <!--Pricing Tables-->#}
-{#        <section id="pricing" class="secondary-color text-center scrollto clearfix ">#}
-{#            <div class="row clearfix">#}
-{##}
-{#                <div class="section-heading">#}
-{#                    <h3>YOUR CHOICE</h3>#}
-{#                    <h2 class="section-title">We have the right package for you</h2>#}
-{#                </div>#}
-{##}
-{#                <!--Pricing Block-->#}
-{#                <div class="pricing-block col-3 wow fadeInUp" data-wow-delay="0.4s">#}
-{#                    <div class="pricing-block-content">#}
-{#                        <h3>Personal</h3>#}
-{#                        <p class="pricing-sub">The standard version</p>#}
-{#                        <div class="pricing">#}
-{#                            <div class="price"><span>$</span>19</div>#}
-{#                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>#}
-{#                        </div>#}
-{#                        <ul>#}
-{#                            <li>5 Downloads</li>#}
-{#                            <li>2 Extensions</li>#}
-{#                            <li>Tutorials</li>#}
-{#                            <li>Forum Support</li>#}
-{#                            <li>1 year free updates</li>#}
-{#                        </ul>#}
-{#                        <a href="#" class="button">BUY TODAY</a>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <!--End Pricing Block-->#}
-{##}
-{#                <!--Pricing Block-->#}
-{#                <div class="pricing-block featured col-3 wow fadeInUp" data-wow-delay="0.6s">#}
-{#                    <div class="pricing-block-content">#}
-{#                        <h3>Student</h3>#}
-{#                        <p class="pricing-sub">Most popular choice</p>#}
-{#                        <div class="pricing">#}
-{#                            <div class="price"><span>$</span>29</div>#}
-{#                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>#}
-{#                        </div>#}
-{#                        <ul>#}
-{#                            <li>15 Downloads</li>#}
-{#                            <li>5 Extensions</li>#}
-{#                            <li>Tutorials with Files</li>#}
-{#                            <li>Forum Support</li>#}
-{#                            <li>2 years free updates</li>#}
-{#                        </ul>#}
-{#                        <a href="#" class="button">BUY TODAY</a>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <!--End Pricing Block-->#}
-{##}
-{#                <!--Pricing Block-->#}
-{#                <div class="pricing-block col-3 wow fadeInUp" data-wow-delay="0.8s">#}
-{#                    <div class="pricing-block-content">#}
-{#                        <h3>Business</h3>#}
-{#                        <p class="pricing-sub">For the whole team</p>#}
-{#                        <div class="pricing">#}
-{#                            <div class="price"><span>$</span>49</div>#}
-{#                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>#}
-{#                        </div>#}
-{#                        <ul>#}
-{#                            <li>Unlimited Downloads</li>#}
-{#                            <li>Unlimited Extensions</li>#}
-{#                            <li>HD Video Tutorials</li>#}
-{#                            <li>Chat Support</li>#}
-{#                            <li>Lifetime free updates</li>#}
-{#                        </ul>#}
-{#                        <a href="#" class="button">BUY TODAY</a>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <!--End Pricing Block-->#}
-{##}
-{#            </div>#}
-{#        </section>#}
-{#        <!--End of Pricing Tables-->#}
 
     </main>
-    <!--End Main Content Area-->
-
-
     <!--Footer-->
     <footer id="landing-footer" class="clearfix">
         <div class="row clearfix">
 
-            <p id="copyright" class="col-2">Made with love by POLAK</p>
+            <p id="copyright" class="col-2">© {% now 'Y' %} Koło Fantastyki i Gier Uniwersytetu Warszawskiego. Wszelkie prawa zastrzeżone.</p>
 
             <!--Social Icons in Footer-->
             <ul class="col-2 social-icons">
@@ -626,6 +392,7 @@
     <!--End of Footer-->
 
 </div>
+
 
 <!-- Include JavaScript resources -->
 
