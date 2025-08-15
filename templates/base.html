@@ -1,0 +1,233 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl-PL" xmlns="http://www.w3.org/1999/html">
+<head lang="pl">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <!--Page Title-->
+    <title>{% block title %}Koło Fantastyki i Gier Uniwersytetu Warszawskiego{% endblock %}</title>
+
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" title="Favicon"/>
+
+    <!-- Main CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Namari Color CSS -->
+    <link rel="stylesheet" href="{% static 'css/namari-color.css' %}">
+
+    <!-- Animate CSS-->
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css">
+
+    <!--Google Webfonts-->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<!-- Preloader -->
+<div id="preloader">
+    <div id="status" class="la-ball-triangle-path">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+<!--End of Preloader-->
+
+<div class="page-border" data-wow-duration="0.7s" data-wow-delay="0.2s">
+    <div class="top-border wow fadeInDown animated" style="visibility: visible; animation-name: fadeInDown;"></div>
+    <div class="right-border wow fadeInRight animated" style="visibility: visible; animation-name: fadeInRight;"></div>
+    <div class="bottom-border wow fadeInUp animated" style="visibility: visible; animation-name: fadeInUp;"></div>
+    <div class="left-border wow fadeInLeft animated" style="visibility: visible; animation-name: fadeInLeft;"></div>
+</div>
+
+
+<div id="wrapper">
+    <header id="banner" class="scrollto clearfix" data-enllax-ratio=".5">
+        <div id="banner-container">
+            <img src="{% static 'images/baner_kfiguw1.png' %}" id="banner-logo" alt="Landing Page"/>
+        </div>
+        <div id="header" class="nav-collapse">
+            <div class="row clearfix">
+                <div class="col-1">
+
+                    <aside>
+                        <!--Social Icons in Header-->
+                        <ul class="social-icons">
+                            <li>
+                                <a target="_blank" title="Facebook"
+                                   href="https://www.facebook.com/KoloFantastykiIGier/">
+                                    <i class="fa fa-facebook fa-1x"></i><span>Facebook</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a target="_blank" title="Discord" href="https://discord.com/invite/MDqn8Z7ba2">
+                                    <i class="fa-brands fa-discord"></i><span>Discord</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a target="_blank" title="Instagram"
+                                   href="https://www.instagram.com/kolo_fantastyki_i_gier_uw/">
+                                    <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!--End of Social Icons in Header-->
+
+                    </aside>
+
+                    <!--Main Navigation-->
+                    <nav id="nav-main">
+                        <ul>
+                            <li>
+                                <a href="{% url 'index' %}#banner">Strona główna</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'index' %}#about">O nas</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'index' %}#gallery">Galeria</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'index' %}#testimonials">Zarząd</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'index' %}#contact-2320">Kontakt</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'rules' %}">Regulamin PNKF "Lustro"</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!--End of Main Navigation-->
+
+                    <div id="nav-trigger"><span></span></div>
+                    <nav id="nav-mobile"></nav>
+
+                </div>
+            </div>
+        </div>
+    </header>
+    <!--End of Header-->
+
+    {% block content %}
+
+
+
+    {% endblock %}
+
+    <!-- ============================================ -->
+    <!--                   Contact                    -->
+    <!-- ============================================ -->
+
+    <section id="contact-2320" class="scrollto">
+        <div class="cs-container">
+            <div class="cs-content wow fadeInLeft" data-wow-delay="0.1s">
+                <span class="section-title wow fadeInUp" data-wow-delay="0.2s">Kontakt</span>
+                <h2 class="convention-text wow fadeInUp" data-wow-delay="0.4s">Masz jakieś pytania? Zadaje je
+                    tutaj!</h2>
+                <!--Form-->
+                <form class="cs-form wow fadeInUp" data-wow-delay="0.6s" id="cs-form-323-2320" name="Contact Form"
+                      method="POST">
+                    <label class="cs-label">
+                        Imię
+                        <input class="cs-input" required type="text" name="name" placeholder="Imię">
+                    </label>
+                    <label class="cs-label cs-email">
+                        E-Mail
+                        <input class="cs-input" required type="email" name="email" placeholder="E-mail">
+                    </label>
+                    <label class="cs-label cs-phone">
+                        Telefon (Opcjonalne)
+                        <input class="cs-input" required type="tel" name="phone" placeholder="Telefon (Opcjonalne)">
+                    </label>
+                    <label class="cs-label">
+                        Wiadomość
+                        <textarea class="cs-input cs-textarea" required name="Message"
+                                  placeholder="Napisz wiadomość..."></textarea>
+                    </label>
+                    <button class="cs-button-solid cs-submit wow pulse" data-wow-delay="0.8s" type="submit">Wyślij
+                    </button>
+                </form>
+            </div>
+            <!--Map Image, pin is made in the Figma then export as one image-->
+            <div class="cs-map wow fadeInRight" data-wow-delay="0.3s">
+                <div class="cs-iframe-wrapper wow zoomIn" data-wow-delay="0.5s">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39120.18268944593!2d20.977484572759725!3d52.20683999597304!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecc5e36fa6309%3A0xa4a1cda06c5afc7f!2sUniwersytet%20Warszawski!5e0!3m2!1spl!2spl!4v1754786237183!5m2!1spl!2spl"
+                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade" width="600" height="450" style="border:0;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="cs-box wow" data-wow-delay="0.7s">
+                    <img class="cs-icon wow rotateIn" data-wow-delay="0.9s" decoding="async" loading="lazy"
+                         src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/Icons/yellow-pin.svg" alt="icon"
+                         width="40" height="40" aria-hidden="true">
+                    <div class="cs-flex">
+                        <span class="cs-header">Lokalizacja</span>
+                        <span class="cs-address">Krakowskie Przedmieście 26/28, 00-927 Warszawa</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Footer-->
+    <footer id="landing-footer" class="clearfix">
+        <div class="row clearfix">
+
+            <p id="copyright" class="col-2">© {% now 'Y' %} Koło Fantastyki i Gier Uniwersytetu Warszawskiego. Wszelkie
+                prawa zastrzeżone.</p>
+
+            <!--Social Icons in Footer-->
+            <ul class="col-2 social-icons">
+                <li>
+                    <a target="_blank" title="Facebook" href="https://www.facebook.com/KoloFantastykiIGier/">
+                        <i class="fa fa-facebook fa-1x"></i><span>Facebook</span>
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" title="Discord" href="https://discord.com/invite/MDqn8Z7ba2">
+                        <i class="fa-brands fa-discord"></i><span>Discord</span>
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" title="Instagram" href="https://www.instagram.com/kolo_fantastyki_i_gier_uw/">
+                        <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
+                    </a>
+                </li>
+            </ul>
+            <!--End of Social Icons in Footer-->
+        </div>
+
+
+    </footer>
+    <!--End of Footer-->
+
+
+</div>
+
+
+<!-- Include JavaScript resources -->
+
+<script src="{% static 'js/jquery.1.8.3.min.js' %}" defer></script>
+<script src="{% static 'js/wow.min.js' %}" defer></script>
+<script src="{% static 'js/featherlight.min.js' %}" defer></script>
+<script src="{% static 'js/featherlight.gallery.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.enllax.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.scrollUp.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.easing.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.stickyNavbar.min.js' %}" defer></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}" defer></script>
+<script src="{% static 'js/images-loaded.min.js' %}" defer></script>
+<script src="{% static 'js/lightbox.min.js' %}" defer></script>
+<script src="{% static 'js/site.js' %}" defer></script>
+<script src="{% static 'js/counter.js' %}" defer></script>
+<script src="https://kit.fontawesome.com/4913fdb7d2.js" crossorigin="anonymous"></script>
+
+</body>
+</html>
