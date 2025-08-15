@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weryfikacja Biletu</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .ticket-status {
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .status-valid {
+        background-color: #d4edda;
+        color: #155724;
+        border: 2px solid #c3e6cb;
+    }
+
+    .status-invalid {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 2px solid #f5c6cb;
+    }
+
+    .status-error {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 2px solid #ffeaa7;
+    }
+
+    .ticket-details {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+        padding: 10px 0;
+        border-bottom: 1px solid #dee2e6;
+        flex-wrap: wrap;
+    }
+
+    .detail-label {
+        font-weight: bold;
+        color: #495057;
+        flex: 1 0 40%;
+        min-width: 120px;
+    }
+
+    .detail-value {
+        color: #6c757d;
+        flex: 1 0 55%;
+        min-width: 150px;
+        text-align: right;
+    }
+
+    .action-buttons {
+        text-align: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px 5px;
+        text-decoration: none;
+        display: inline-block;
+        min-width: 180px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .success-message {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+        border-left: 4px solid #bee5eb;
+    }
+
+    @media (max-width: 600px) {
+        .detail-row {
+            flex-direction: column;
+            text-align: left;
+        }
+        .detail-value {
+            text-align: left;
+            margin-top: 5px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Weryfikacja Biletu</h1>
+        {% if ticket_id %}
+            <h2>ID: {{ ticket_id }}</h2>
+        {% endif %}
+    </div>
+
+    {% if success_message %}
+        <div class="success-message">
+            {{ success_message }}
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="ticket-status status-error">
+            ❌ {{ error }}
+        </div>
+    {% elif is_valid %}
+        <div class="ticket-status status-valid">
+            ✅ Bilet jest ważny
+        </div>
+    {% else %}
+        <div class="ticket-status status-invalid">
+            ❌ Bilet jest nieważny lub został już użyty
+        </div>
+    {% endif %}
+
+    {% if ticket and not error %}
+        <div class="ticket-details">
+            <h3>Szczegóły biletu:</h3>
+            <div class="detail-row">
+                <span class="detail-label">ID Biletu:</span>
+                <span class="detail-value">{{ ticket.ticket_id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Data utworzenia:</span>
+                <span class="detail-value">{{ ticket.created_at|date:"d.m.Y H:i:s" }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value">
+                    {% if ticket.is_used %}
+                        Użyty
+                    {% else %}
+                        Nieużywany
+                    {% endif %}
+                </span>
+            </div>
+            {% if ticket.verified_at %}
+                <div class="detail-row">
+                    <span class="detail-label">Data weryfikacji/użycia:</span>
+                    <span class="detail-value">{{ ticket.verified_at|date:"d.m.Y H:i:s" }}</span>
+                </div>
+            {% endif %}
+            {% if expiry_time %}
+                <div class="detail-row">
+                    <span class="detail-label">Bilet przestanie być ważny:</span>
+                    <span class="detail-value">{{ expiry_time|date:"d.m.Y H:i:s" }}</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="action-buttons">
+            {% if is_valid and not ticket.is_used %}
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Czy na pewno chcesz oznaczyć ten bilet jako użyty? Tej operacji nie można cofnąć.')">
+                        Oznacz jako użyty
+                    </button>
+                </form>
+            {% endif %}
+            <a href="/" class="btn btn-secondary">Powrót do strony głównej</a>
+        </div>
+    {% else %}
+        <div class="action-buttons">
+            <a href="/" class="btn btn-secondary">Powrót do strony głównej</a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    {% if is_valid and not ticket.is_used %}
+        setTimeout(function () {
+            location.reload();
+        }, 30000);
+    {% endif %}
+</script>
+</body>
+</html>
