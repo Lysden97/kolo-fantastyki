@@ -51,3 +51,12 @@ function startCountdown(endTime, type) {
     const interval = setInterval(updateCountdown, 1000);
 }
 
+$(`[unique-script-id="w-w-dm-id"] .faq .for-flex`).click(function(event) {
+  $(event.target).closest(".faq").toggleClass("active")
+})
+
+$(`[unique-script-id="w-w-dm-id"] .faq .toggle-faq-icon `).click(function(event) {
+  event.stopPropagation();
+  $(event.target).closest(".faq").toggleClass("active")
+})
+

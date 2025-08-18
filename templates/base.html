@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html lang="pl-PL" xmlns="http://www.w3.org/1999/html">
 <head lang="pl">
-    <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8">
     <!--Page Title-->
     <title>{% block title %}Koło Fantastyki i Gier Uniwersytetu Warszawskiego{% endblock %}</title>
@@ -17,7 +16,7 @@
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" title="Favicon"/>
 
     <!-- Main CSS Files -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dist/style.css' %}">
 
     <!-- Namari Color CSS -->
     <link rel="stylesheet" href="{% static 'css/namari-color.css' %}">
@@ -48,7 +47,7 @@
 
 
 <div id="wrapper">
-    <header id="banner" class="scrollto clearfix" data-enllax-ratio=".5">
+    <header id="banner" class="scrollto clearfix pt-24 md:pt-0" data-enllax-ratio=".5">
         <div id="banner-container">
             <img src="{% static 'images/baner_kfiguw1.png' %}" id="banner-logo" alt="Landing Page"/>
         </div>
@@ -91,7 +90,10 @@
                                 <a href="{% url 'index' %}#about">O nas</a>
                             </li>
                             <li>
-                                <a href="{% url 'index' %}#gallery">Galeria</a>
+                                <a href="{% url 'index' %}#events">Działalność w kole</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'index' %}#gallery-tw">Galeria</a>
                             </li>
                             <li>
                                 <a href="{% url 'index' %}#testimonials">Zarząd</a>
@@ -100,7 +102,7 @@
                                 <a href="{% url 'index' %}#contact-2320">Kontakt</a>
                             </li>
                             <li>
-                                <a href="{% url 'rules' %}">Regulamin PNKF "Lustro"</a>
+                                <a href="{% url 'rules' %}">Regulaminy</a>
                             </li>
                         </ul>
                     </nav>
@@ -129,26 +131,42 @@
         <div class="cs-container">
             <div class="cs-content wow fadeInLeft" data-wow-delay="0.1s">
                 <span class="section-title wow fadeInUp" data-wow-delay="0.2s">Kontakt</span>
-                <h2 class="convention-text wow fadeInUp" data-wow-delay="0.4s">Masz jakieś pytania? Zadaje je
-                    tutaj!</h2>
+                {% if messages %}
+                    {% for message in messages %}
+                        <h2 class="convention-text {% if message.tags %}"
+                            {{ message.tags }}{% endif %}
+                            style="color: #008000">
+                            {{ message }}
+                        </h2>
+                    {% endfor %}
+                {% else %}
+                    <h2 class="convention-text wow fadeInUp" data-wow-delay="0.4s">Masz jakieś pytania? Zadaje je
+                        tutaj!</h2>
+                {% endif %}
                 <!--Form-->
-                <form class="cs-form wow fadeInUp" data-wow-delay="0.6s" id="cs-form-323-2320" name="Contact Form"
+                <form action="{% url 'contact' %}" class="cs-form wow fadeInUp" data-wow-delay="0.6s"
+                      id="cs-form-323-2320" name="Contact Form"
                       method="POST">
+                    {% csrf_token %}
                     <label class="cs-label">
                         Imię
-                        <input class="cs-input" required type="text" name="name" placeholder="Imię">
+                        <input class="cs-input" required type="text" name="message-name" placeholder="Imię">
                     </label>
                     <label class="cs-label cs-email">
                         E-Mail
-                        <input class="cs-input" required type="email" name="email" placeholder="E-mail">
+                        <input class="cs-input" required type="email" name="message-email" placeholder="E-mail">
                     </label>
                     <label class="cs-label cs-phone">
                         Telefon (Opcjonalne)
-                        <input class="cs-input" required type="tel" name="phone" placeholder="Telefon (Opcjonalne)">
+                        <input class="cs-input" type="tel" name="message-phone" placeholder="Telefon (Opcjonalne)"
+                               pattern="[0-9 ]{9, 11}" inputmode="numeric"
+                               oninput="this.value = this.value.replace(/\D/g, '').replace(/(\d{3})(?=\d)/g, '$1 ').trim().slice(0, 11);"
+                               maxlength="11"
+                        >
                     </label>
                     <label class="cs-label">
                         Wiadomość
-                        <textarea class="cs-input cs-textarea" required name="Message"
+                        <textarea class="cs-input cs-textarea" required name="message-subject"
                                   placeholder="Napisz wiadomość..."></textarea>
                     </label>
                     <button class="cs-button-solid cs-submit wow pulse" data-wow-delay="0.8s" type="submit">Wyślij
@@ -227,7 +245,7 @@
 <script src="{% static 'js/lightbox.min.js' %}" defer></script>
 <script src="{% static 'js/site.js' %}" defer></script>
 <script src="{% static 'js/counter.js' %}" defer></script>
-<script src="https://kit.fontawesome.com/4913fdb7d2.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/4913fdb7d2.js" crossorigin="anonymous" defer></script>
 
 </body>
 </html>

@@ -1,23 +1,22 @@
+import io
+import os
+import uuid
 from datetime import timedelta
 
-from django.utils.decorators import method_decorator
-
-from website.models import Counter, Ticket, TicketDownloadLog
-
-import os
+import qrcode
 from django.conf import settings
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.http import FileResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views import View
-
-import io
-import uuid
-from django.http import FileResponse, HttpResponseForbidden
-from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A6
-from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
-import qrcode
+from reportlab.pdfgen import canvas
+
+from website.models import Counter, Ticket, TicketDownloadLog
 
 
 def get_client_ip(request):
@@ -181,3 +180,32 @@ class IndexView(View):
 class RulesView(View):
     def get(self, request):
         return render(request, 'rules.html')
+
+
+class ContactView(View):
+    def get(self, request):
+        return redirect('/#contact-2320')
+
+    def post(self, request):
+        message_name = request.POST.get('message-name')
+        message_email = request.POST.get('message-email')
+        message_phone = request.POST.get('message-phone')
+        message_subject = request.POST.get('message-subject')
+
+        send_mail(
+            message_name,
+            'Imię: {}\n'
+            'Email: {}\n'
+            'Telefon {}\n\n'
+            'Wiadomości: {}'.format(
+                message_name,
+                message_email,
+                message_phone,
+                message_subject,
+            ),
+            message_email,
+            ['kfig@uw.edu.pl']
+        )
+
+        messages.success(request, 'Twoja wiadomość została wysłana. Dziękujemy!')
+        return redirect('/#contact-2320')
