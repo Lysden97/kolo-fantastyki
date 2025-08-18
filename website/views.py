@@ -9,8 +9,10 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import FileResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.html import strip_tags
 from django.views import View
 from reportlab.lib.pagesizes import A6
 from reportlab.lib.utils import ImageReader
@@ -192,20 +194,28 @@ class ContactView(View):
         message_phone = request.POST.get('message-phone')
         message_subject = request.POST.get('message-subject')
 
+        context = {
+            'message_name': message_name,
+            'message_email': message_email,
+            'message_phone': message_phone,
+            'message_subject': message_subject,
+        }
+
+        html_message = render_to_string('email.html', context)
+        plain_message = strip_tags(html_message)
+
         send_mail(
-            message_name,
-            'Imię: {}\n'
-            'Email: {}\n'
-            'Telefon {}\n\n'
-            'Wiadomości: {}'.format(
-                message_name,
-                message_email,
-                message_phone,
-                message_subject,
-            ),
-            message_email,
-            ['kfig@uw.edu.pl']
+            subject=f'Nowa wiadomość od {message_name}',
+            message=plain_message,
+            from_email=message_email,
+            recipient_list=['kfig@uw.edu.pl'],
+            html_message=html_message,
         )
 
         messages.success(request, 'Twoja wiadomość została wysłana. Dziękujemy!')
         return redirect('/#contact-2320')
+
+
+class EmailView(View):
+    def get(self, request):
+        return render(request, 'email.html')

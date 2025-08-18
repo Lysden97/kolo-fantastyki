@@ -86,7 +86,11 @@
                     {% endif %}
 
                 {% endif %}
-                <section style="padding: 80px">
+
+
+                {% if status == 'Wydarzenie właśnie trwa' or status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
+
+                    <section style="padding: 80px">
                     <a href="{% url 'generate_ticket' %}" class="cssbuttons-io-button wow bounceIn"
                        data-wow-delay="0.9s">
                         <svg
@@ -105,8 +109,6 @@
                     </a>
                 </section>
 
-
-                {% if status == 'Wydarzenie właśnie trwa' or status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
                     <!--Call to Action-->
                     <a href="{{ convention.link }}"
                        class="button wow bounceIn"

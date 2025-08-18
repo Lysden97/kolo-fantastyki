@@ -145,7 +145,7 @@
                 {% endif %}
                 <!--Form-->
                 <form action="{% url 'contact' %}" class="cs-form wow fadeInUp" data-wow-delay="0.6s"
-                      id="cs-form-323-2320" name="Contact Form"
+                      id="cs-form-123" name="Contact Form"
                       method="POST">
                     {% csrf_token %}
                     <label class="cs-label">
@@ -169,7 +169,7 @@
                         <textarea class="cs-input cs-textarea" required name="message-subject"
                                   placeholder="Napisz wiadomość..."></textarea>
                     </label>
-                    <button class="cs-button-solid cs-submit wow pulse" data-wow-delay="0.8s" type="submit">Wyślij
+                    <button id="sendBtn" class="cs-button-solid cs-submit wow pulse" data-wow-delay="0.8s" type="submit">Wyślij
                     </button>
                 </form>
             </div>

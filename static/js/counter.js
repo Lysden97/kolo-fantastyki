@@ -60,3 +60,36 @@ $(`[unique-script-id="w-w-dm-id"] .faq .toggle-faq-icon `).click(function(event)
   $(event.target).closest(".faq").toggleClass("active")
 })
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    const btn = document.getElementById("sendBtn");
+    const form = document.getElementById("cs-form-123");
+
+    form.addEventListener("submit", function () {
+      btn.disabled = true;
+
+      btn.innerHTML = `
+        <span class="spinner" 
+          style="
+            display:inline-block;
+            width:16px;
+            height:16px;
+            margin-right:8px;
+            border:2px solid #fff;
+            border-top:2px solid transparent;
+            border-radius:50%;
+            animation: spin 0.8s linear infinite;">
+        </span>
+        Wysyłanie...
+      `;
+    });
+  });
+
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
