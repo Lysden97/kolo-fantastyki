@@ -1,0 +1,36 @@
+services:
+  db:
+# konfiguracja bazy danych
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${REMOVED_SECRET}
+      POSTGRES_DB: KoloFantastyki
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  django-web:
+    build: .
+    container_name: django-docker
+    depends_on:
+      - db
+    volumes:
+      - ./static:/app/staticfiles
+    env_file:
+      - .env
+
+  frontend-proxy:
+    image: nginx:latest
+    ports:
+      - "8001:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./static:/static:ro
+    depends_on:
+      - django-web
+volumes:
+  postgres_data:
