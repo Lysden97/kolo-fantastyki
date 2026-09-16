@@ -30,8 +30,8 @@ Downloads are limited to 2 tickets per IP address over 30 days. Visitors sharing
 Requirements: Docker with Compose v2 and Python 3.13+ to create the configuration.
 
 ```bash
-git clone https://github.com/Lysden97/KoloFantastyki.git
-cd KoloFantastyki
+git clone https://github.com/Lysden97/kolo-fantastyki.git
+cd kolo-fantastyki
 python scripts/setup_env.py
 docker compose up --build -d --wait
 docker compose exec django-web python manage.py seed_demo
