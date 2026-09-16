@@ -1,0 +1,85 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: test
+          POSTGRES_DB: test_app
+          # Ephemeral CI database, not a deployment credential.
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DJANGO_SETTINGS_MODULE: djangoKoloFantastyki.test_settings
+      TEST_POSTGRES: "True"
+      DATABASE_ENGINE: postgresql
+      DATABASE_NAME: test_app
+      DATABASE_USER: test
+      DATABASE_PASSWORD: unused-with-ci-trust-auth
+      DATABASE_HOST: localhost
+      DATABASE_PORT: "5432"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: python manage.py makemigrations --check --dry-run
+      - run: coverage run manage.py test
+      - run: coverage report --fail-under=85
+      - run: pip-audit -r requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm run build:css
+      - run: python manage.py collectstatic --noinput
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python scripts/setup_env.py
+      - run: docker compose config --quiet
+      - run: docker compose up --build --wait --wait-timeout 180
+      - run: curl --fail --retry 5 --retry-delay 2 http://localhost:8001/
+      - run: curl --fail http://localhost:8001/static/admin/css/base.css
+      - name: Container logs
+        if: failure()
+        run: docker compose logs
+      - name: Stop containers
+        if: always()
+        run: docker compose down --volumes
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan current files without exposing findings
+        run: >-
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.30.1
+          dir /repo --config /repo/.gitleaks.toml --redact --no-banner
+      # Full history still contains a revoked-or-to-be-rotated legacy password.
+      # Scan history separately before rewriting it; do not suppress the finding.

@@ -1,36 +1,59 @@
 services:
   db:
-# konfiguracja bazy danych
-    image: postgres:17
+    image: postgres:17-bookworm
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${REMOVED_SECRET}
-      POSTGRES_DB: KoloFantastyki
-    ports:
-      - "5433:5432"
+      POSTGRES_USER: ${DATABASE_USER:?Set DATABASE_USER in .env}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}
+      POSTGRES_DB: ${DATABASE_NAME:?Set DATABASE_NAME in .env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    env_file:
-      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   django-web:
     build: .
-    container_name: django-docker
+    env_file: .env
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      TRUST_PROXY_HEADERS: "True"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
-      - ./static:/app/staticfiles
-    env_file:
-      - .env
+      - staticfiles:/app/staticfiles
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8000), timeout=2).close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  cleanup:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+    command: ["python", "manage.py", "clean_old_ticket_logs", "--loop"]
+    depends_on:
+      django-web:
+        condition: service_healthy
+    restart: unless-stopped
 
   frontend-proxy:
-    image: nginx:latest
+    image: nginx:stable-bookworm
     ports:
-      - "8001:80"
+      - "127.0.0.1:8001:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./static:/static:ro
+      - staticfiles:/static:ro
     depends_on:
-      - django-web
+      django-web:
+        condition: service_healthy
+
 volumes:
   postgres_data:
+  staticfiles:

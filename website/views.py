@@ -1,142 +1,86 @@
-import io
-import os
-import uuid
+import logging
 from datetime import timedelta
+from functools import wraps
+from smtplib import SMTPException
 
-import qrcode
 from django.conf import settings
 from django.contrib import messages
-from django.core.mail import send_mail
-from django.http import FileResponse, HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.core.mail import EmailMultiAlternatives
+from django.http import FileResponse, HttpResponse
+from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.views import View
-from reportlab.lib.pagesizes import A6
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfgen import canvas
 
-from website.models import Counter, Ticket, TicketDownloadLog
+from .forms import ContactForm
+from .models import Counter, Ticket
+from .services import RateLimitExceeded, generate_ticket, reserve_contact_attempt, verify_ticket
 
-
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+logger = logging.getLogger(__name__)
 
 
 class GenerateTicketView(View):
-    MAX_DOWNLOADS_PER_IP = 2
-
-    def get(self, request):
-        ip_address = get_client_ip(request)
-        month_ago = timezone.now() - timedelta(days=30)
-        downloads_count = TicketDownloadLog.objects.filter(ip_address=ip_address, created_at__gte=month_ago).count()
-        if downloads_count >= self.MAX_DOWNLOADS_PER_IP:
-            return HttpResponseForbidden('Przekroczono limit pobrań biletu (limit 2 biletów na użytkownika)')
-
-        TicketDownloadLog.objects.create(ip_address=ip_address)
-
-        ticket_id = str(uuid.uuid4())[:8]
-
-        ticket = Ticket.objects.create(ticket_id=ticket_id)
-
-        buffer = io.BytesIO()
-        p = canvas.Canvas(buffer, pagesize=A6)
-        width, height = A6
-
-        if settings.DEBUG:
-            template_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'Lustro_bilet_pion.png')
-        else:
-            template_path = os.path.join(settings.STATIC_ROOT, 'images', 'Lustro_bilet_pion.png')
-
-        if os.path.exists(template_path):
-            p.drawImage(template_path, 0, 0, width, height)
-
-        qr = qrcode.QRCode(box_size=10, border=4)
-        qr.add_data(f'{request.build_absolute_uri('/website/verify-ticket/')}{ticket_id}')
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white").convert("RGB")
-
-        img_buffer = io.BytesIO()
-        img.save(img_buffer, format='PNG')
-        img_buffer.seek(0)
-        qr_reader = ImageReader(img_buffer)
-
-        p.drawImage(qr_reader, 50, 110, 198, 167)
-
-        p.showPage()
-        p.save()
-        buffer.seek(0)
-
-        return FileResponse(buffer, as_attachment=False, filename=f'Bilet-{ticket_id}.pdf')
+    def post(self, request):
+        try:
+            ticket, pdf = generate_ticket(request)
+        except RateLimitExceeded:
+            return HttpResponse("Limit 2 biletów na adres IP w ciągu 30 dni.", status=429)
+        return FileResponse(
+            pdf, content_type="application/pdf", filename=f"Bilet-{ticket.ticket_id}.pdf"
+        )
 
 
 def staff_required_redirect_index(view_func):
-    def _wrapped_view(request, *args, **kwargs):
+    @wraps(view_func)
+    def wrapped(request, *args, **kwargs):
         if request.user.is_authenticated and request.user.is_staff:
             return view_func(request, *args, **kwargs)
-        return redirect('index')
+        return redirect("index")
 
-    return _wrapped_view
+    return wrapped
 
 
-@method_decorator(staff_required_redirect_index, name='dispatch')
+@method_decorator(staff_required_redirect_index, name="dispatch")
 class VerifyTicketView(View):
-    template_name = 'verify-ticket.html'
-
-    def _render_ticket(self, request, ticket_id, error=None, success_message=None, mark_used=False):
+    def _render_ticket(self, request, ticket_id, mark_used=False):
+        error = success = None
         try:
-            ticket = Ticket.objects.get(ticket_id=ticket_id)
-
             if mark_used:
-                if not ticket.is_used:
-                    ticket.is_used = True
-                    ticket.verified_at = timezone.now()
-                    ticket.save()
-                    success_message = success_message or 'Bilet został pomyślnie oznaczony jako użyty'
+                ticket, changed = verify_ticket(ticket_id)
+                if changed:
+                    success = "Bilet został pomyślnie oznaczony jako użyty"
                 else:
-                    error = error or 'Bilet został już wcześniej użyty'
-
-            is_still_valid = True
-            expiry_time = None
-            if ticket.is_used and ticket.verified_at:
-                expiry_time = ticket.verified_at + timedelta(hours=48)
-                if timezone.now() > expiry_time:
-                    is_still_valid = False
-
-            context = {
-                'ticket': ticket,
-                'is_valid': is_still_valid,
-                'ticket_id': ticket_id,
-                'error': error,
-                'success_message': success_message,
-                'expiry_time': expiry_time,
-            }
-            return render(request, self.template_name, context)
-
+                    error = "Bilet został już wcześniej użyty"
+            else:
+                ticket = Ticket.objects.get(ticket_id=ticket_id)
         except Ticket.DoesNotExist:
-            context = {
-                'ticket': None,
-                'error': 'Bilet o podanym ID nie istnieje',
-                'ticket_id': ticket_id,
-                'is_valid': False,
-            }
-            return render(request, self.template_name, context)
-
-        except Exception:
-            context = {
-                'ticket': None,
-                'error': 'Wystąpił błąd podczas przetwarzania biletu',
-                'ticket_id': ticket_id,
-                'is_valid': False,
-            }
-            return render(request, self.template_name, context)
+            return render(
+                request,
+                "verify-ticket.html",
+                {
+                    "ticket": None,
+                    "ticket_id": ticket_id,
+                    "is_valid": False,
+                    "error": "Bilet o podanym ID nie istnieje",
+                },
+                status=404,
+            )
+        expiry = ticket.verified_at + timedelta(hours=48) if ticket.verified_at else None
+        valid = not ticket.is_used or (expiry is not None and timezone.now() < expiry)
+        return render(
+            request,
+            "verify-ticket.html",
+            {
+                "ticket": ticket,
+                "ticket_id": ticket_id,
+                "is_valid": valid,
+                "expiry_time": expiry,
+                "error": error,
+                "success_message": success,
+            },
+        )
 
     def get(self, request, ticket_id):
         return self._render_ticket(request, ticket_id)
@@ -149,73 +93,59 @@ class IndexView(View):
     def get(self, request):
         convention = Counter.objects.last()
         now = timezone.now()
-
-        if not convention:
-            status = 'Nowe informacje wkrótce!'
-
-            context = {
-                'status': status,
-            }
-            return render(request, 'index.html', context)
-
-        status = 'Nowe informacje wkrótce!'
-        timestamp_start = None
-        timestamp_end = None
-
-        if convention.start_date < now <= convention.end_date:
-            status = 'Wydarzenie właśnie trwa'
-            timestamp_end = int(convention.end_date.timestamp() * 1000)
-        elif now < convention.start_date:
-            status = 'Wydarzenie jeszcze się nie rozpoczęło'
-            timestamp_start = int(convention.start_date.timestamp() * 1000)
-
-        context = {
-            'convention': convention,
-            'status': status,
-            'timestamp_start': timestamp_start,
-            'timestamp_end': timestamp_end,
-        }
-
-        return render(request, 'index.html', context)
+        status = "Nowe informacje wkrótce!"
+        timestamp_start = timestamp_end = None
+        if convention:
+            if convention.start_date <= now < convention.end_date:
+                status = "Wydarzenie właśnie trwa"
+                timestamp_end = int(convention.end_date.timestamp() * 1000)
+            elif now < convention.start_date:
+                status = "Wydarzenie jeszcze się nie rozpoczęło"
+                timestamp_start = int(convention.start_date.timestamp() * 1000)
+        return render(
+            request,
+            "index.html",
+            {
+                "convention": convention,
+                "status": status,
+                "timestamp_start": timestamp_start,
+                "timestamp_end": timestamp_end,
+            },
+        )
 
 
 class RulesView(View):
     def get(self, request):
-        return render(request, 'rules.html')
+        return render(request, "rules.html")
 
 
 class ContactView(View):
     def get(self, request):
-        return redirect('/#contact-2320')
+        return redirect("/#contact-2320")
 
     def post(self, request):
-        message_name = request.POST.get('message-name')
-        message_email = request.POST.get('message-email')
-        message_phone = request.POST.get('message-phone')
-        message_subject = request.POST.get('message-subject')
-
-        context = {
-            'message_name': message_name,
-            'message_email': message_email,
-            'message_phone': message_phone,
-            'message_subject': message_subject,
-        }
-
-        html_message = render_to_string('email.html', context)
-        plain_message = strip_tags(html_message)
-
-        send_mail(
-            subject=f'Nowa wiadomość od {message_name}',
-            message=plain_message,
-            from_email=message_email,
-            recipient_list=['kfig@uw.edu.pl'],
-            html_message=html_message,
+        form = ContactForm(request.POST, prefix="message")
+        if not form.is_valid():
+            return render(request, "contact-errors.html", {"form": form}, status=400)
+        try:
+            reserve_contact_attempt(request)
+        except RateLimitExceeded:
+            return HttpResponse("Limit 3 wiadomości na godzinę z jednego adresu IP.", status=429)
+        context = {f"message_{key}": value for key, value in form.cleaned_data.items()}
+        html = render_to_string("email.html", context)
+        email = EmailMultiAlternatives(
+            subject=f"Nowa wiadomość od {form.cleaned_data['name']}",
+            body=strip_tags(html),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[settings.CONTACT_RECIPIENT],
+            reply_to=[form.cleaned_data["email"]],
         )
-
-        messages.success(request, 'Twoja wiadomość została wysłana. Dziękujemy!')
-        return redirect('/#contact-2320')
-
-
-class EmailView(View):
-    def get(self, request):
-        return render(request, 'email.html')
+        email.attach_alternative(html, "text/html")
+        try:
+            email.send()
+        except (SMTPException, OSError):
+            logger.warning("Contact email delivery failed", exc_info=True)
+            messages.error(request, "Nie udało się wysłać wiadomości. Spróbuj ponownie później.")
+        else:
+            messages.success(request, "Twoja wiadomość została wysłana. Dziękujemy!")
+        return redirect("/#contact-2320")

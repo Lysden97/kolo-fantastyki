@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section style="padding: 100px 20px; max-width: 800px; margin: auto">
+    <h1>Popraw dane wiadomości</h1>
+    <form method="post" action="{% url 'contact' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Wyślij ponownie</button>
+    </form>
+</section>
+{% endblock %}

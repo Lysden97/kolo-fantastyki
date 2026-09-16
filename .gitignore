@@ -1,10 +1,25 @@
 .idea/
-.venv
+.venv/
 .env
-db.sqlite3
-*.pyc
-.vscode
-node_modules
-package-lock.json
-project
+.env.*
+!.env.example
+*.sqlite3
+*.py[cod]
+.vscode/
+node_modules/
 __pycache__/
+static/admin/
+staticfiles/
+.coverage*
+htmlcov/
+.ruff_cache/
+*.log
+artifacts/
+
+# Local audit and publication notes
+/SECURITY.md
+/docs/VALIDATION.md
+/docs/REPOSITORY.md
+
+# One-off asset maintenance script
+/scripts/optimize_images.py

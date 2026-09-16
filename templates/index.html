@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{% endblock %}
+{% block title %}Koło Fantastyki i Gier UW — wydarzenia i bilety{% endblock %}
 
 {% block content %}
     <main id="content">
-        <section style="padding: 200px">
+        <section style="padding: 80px 20px">
             <div class="flex flex-col items-center justify-center pt-20">
                 {% if convention.name is not None %}
                     <h1 class="convention-name wow fadeInDown" data-wow-delay="0.1s">{{ convention.name }}</h1>
@@ -90,8 +90,10 @@
 
                 {% if status == 'Wydarzenie właśnie trwa' or status == 'Wydarzenie jeszcze się nie rozpoczęło' %}
 
-                    <section style="padding: 80px">
-                    <a href="{% url 'generate_ticket' %}" class="cssbuttons-io-button wow bounceIn"
+                    <section style="padding: 40px 10px">
+                    <form method="post" action="{% url 'generate_ticket' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="cssbuttons-io-button wow bounceIn"
                        data-wow-delay="0.9s">
                         <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +108,8 @@
                             ></path>
                         </svg>
                         Pobierz darmowy bilet!
-                    </a>
+                    </button>
+                    </form>
                 </section>
 
                     <!--Call to Action-->
@@ -235,7 +238,7 @@
                         </div>
                         <div class="responsive-container-block">
                             <img class="bigImg wow fadeInLeft"
-                                 src="{% static '/images/events.JPG' %}"
+                                 src="{% static 'images/events.JPG' %}"
                                  data-wow-delay="0.1s">
                             <div class="responsive-container-block qaa">
                                 <div class="container-block">
@@ -489,21 +492,21 @@
                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"/>
             </a>
 
-            <a href="{% static 'images/galeria3.JPG' %}" data-featherlight="image"
+            <a href="{% static 'images/galeria3.jpg' %}" data-featherlight="image"
                class="block overflow-hidden rounded-lg shadow aspect-[4/3] wow fadeIn" data-wow-delay="0.50s">
-                <img src="{% static 'images/galeria3.JPG' %}" alt="Landing Page"
+                <img src="{% static 'images/galeria3.jpg' %}" alt="Landing Page"
                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"/>
             </a>
 
-            <a href="{% static 'images/galeria4.JPG' %}" data-featherlight="image"
+            <a href="{% static 'images/galeria4.jpg' %}" data-featherlight="image"
                class="block overflow-hidden rounded-lg shadow aspect-[4/3] wow fadeIn" data-wow-delay="0.50s">
-                <img src="{% static 'images/galeria4.JPG' %}" alt="Landing Page"
+                <img src="{% static 'images/galeria4.jpg' %}" alt="Landing Page"
                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"/>
             </a>
 
-            <a href="{% static 'images/galeria5.JPG' %}" data-featherlight="image"
+            <a href="{% static 'images/galeria5.jpg' %}" data-featherlight="image"
                class="block overflow-hidden rounded-lg shadow aspect-[4/3] wow fadeIn" data-wow-delay="0.50s">
-                <img src="{% static 'images/galeria5.JPG' %}" alt="Landing Page"
+                <img src="{% static 'images/galeria5.jpg' %}" alt="Landing Page"
                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"/>
             </a>
 

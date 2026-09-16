@@ -1,6 +1,6 @@
 
 
-// Nie ruszać bo umrze!!!
+// Event countdown, FAQ controls and contact form feedback.
 
 
 document.addEventListener('DOMContentLoaded', function () {

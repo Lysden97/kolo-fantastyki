@@ -1,0 +1,14 @@
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+exclude = ["website/migrations", "node_modules", "artifacts"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.coverage.run]
+source = ["website"]
+omit = ["*/migrations/*", "*/tests/*", "*/tests.py"]
+
+[tool.coverage.report]
+show_missing = true

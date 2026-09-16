@@ -1,0 +1,15 @@
+title = "Koło Fantastyki secret scanning"
+[extend]
+useDefault = true
+
+[[rules]]
+id = "literal-postgres-password"
+description = "Literal PostgreSQL password in YAML"
+regex = '''(?im)^\s*POSTGRES_PASSWORD\s*:\s*["']?([^\s\$"'#][^\r\n]*)'''
+secretGroup = 1
+
+[[rules]]
+id = "literal-django-secret"
+description = "Literal Django secret key"
+regex = '''(?m)^\s*SECRET_KEY\s*=\s*["']([^"']{20,})["']'''
+secretGroup = 1

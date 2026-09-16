@@ -1,0 +1,6 @@
+* text=auto
+*.sh text eol=lf
+static/css/dist/* linguist-generated=true
+static/js/*.min.js linguist-vendored=true
+static/css/animate.css linguist-vendored=true
+static/css/vendor/* linguist-vendored=true

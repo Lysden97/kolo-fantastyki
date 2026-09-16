@@ -1,50 +1,26 @@
-# Stage 1: Base build stage
-FROM python:3.13-slim AS builder
+FROM node:24-bookworm-slim AS frontend
+WORKDIR /build
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY static ./static
+COPY templates ./templates
+RUN npm run build:css
 
-# Create the app directory
-RUN mkdir /app
+FROM python:3.13-slim-bookworm AS builder
+WORKDIR /build
+COPY requirements.txt ./
+RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
-# Set the working directory
+FROM python:3.13-slim-bookworm
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
-
-# Set environment variables to optimize Python
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Install dependencies first for caching benefit
-RUN pip install --upgrade pip
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Stage 2: Production stage
-FROM python:3.13-slim
-
-RUN useradd -m -r appuser && \
-   mkdir /app && \
-   chown -R appuser /app
-
-# Copy the Python dependencies from the builder stage
-COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
-COPY --from=builder /usr/local/bin/ /usr/local/bin/
-
-# Set the working directory
-WORKDIR /app
-
-# Copy application code
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir --no-index /wheels/* && rm -rf /wheels \
+    && useradd --create-home --uid 10001 appuser \
+    && mkdir /app/staticfiles && chown appuser:appuser /app/staticfiles
 COPY --chown=appuser:appuser . .
-
-# Set environment variables to optimize Python
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Switch to non-root user
+COPY --from=frontend --chown=appuser:appuser /build/static/css/dist/style.css ./static/css/dist/style.css
+RUN chmod +x /app/entrypoint.prod.sh
 USER appuser
-
-# Expose the application port
 EXPOSE 8000
-
-# Make entry file executable
-RUN chmod +x  /app/entrypoint.prod.sh
-
-# Start the application using Gunicorn
 CMD ["/app/entrypoint.prod.sh"]
