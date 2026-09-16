@@ -62,6 +62,9 @@ docker compose exec -e TEST_POSTGRES=True django-web python manage.py test --set
 
 Tests cover PDF generation, permissions, ticket validity, the contact form and limits under concurrent requests. They use a separate PostgreSQL test database.
 
+For development outside Docker, install the application and development tools with
+`pip install -r requirements-dev.txt`. The Docker image uses only `requirements.txt`.
+
 ## Interface
 
 The website uses an adapted **Namari** template. Library authors and asset credits are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

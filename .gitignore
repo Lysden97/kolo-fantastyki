@@ -17,7 +17,6 @@ htmlcov/
 artifacts/
 
 # Local audit and publication notes
-/SECURITY.md
 /docs/VALIDATION.md
 /docs/REPOSITORY.md
 
