@@ -43,7 +43,7 @@ jobs:
       - run: coverage run manage.py test
       - run: coverage report --fail-under=85
       - run: pip-audit -r requirements.txt
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "24"
           cache: npm
