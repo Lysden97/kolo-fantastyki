@@ -33,13 +33,13 @@ function startCountdown(endTime, type) {
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Zaktualizuj odpowiednie elementy
+            // Update the countdown display.
             document.getElementById(`days_${type}`).innerHTML = days;
             document.getElementById(`hours_${type}`).innerHTML = hours;
             document.getElementById(`minutes_${type}`).innerHTML = minutes;
             document.getElementById(`seconds_${type}`).innerHTML = seconds;
         } else {
-            // Kiedy czas minął
+            // Reset the display when the countdown ends.
             document.getElementById(`days_${type}`).innerHTML = 0;
             document.getElementById(`hours_${type}`).innerHTML = 0;
             document.getElementById(`minutes_${type}`).innerHTML = 0;

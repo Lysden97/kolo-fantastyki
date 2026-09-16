@@ -1,21 +1,21 @@
-# Autorstwo i zasoby zewnętrzne
+# Third-party notices
 
-Interfejs bazuje na szablonie Namari dostosowanym do strony Koła Fantastyki i Gier UW.
-Poniżej wymieniono wykorzystane biblioteki i zasoby zewnętrzne.
+The interface is based on the Namari template, adapted for Koło Fantastyki i Gier UW.
+The libraries and external resources used in the project are listed below.
 
-| Zasób | Autorstwo i źródło |
+| Resource | Attribution and source |
 | --- | --- |
-| Namari Landing Page 1.1.0 | ShapingRain; dostosowany szablon, informacje w `static/css/style.css` i `namari-color.css` |
+| Namari Landing Page 1.1.0 | ShapingRain; adapted template, credits in `static/css/style.css` and `namari-color.css` |
 | jQuery 3.7.1 | OpenJS Foundation, MIT, https://jquery.com/license/ |
-| Featherlight 1.3.3 i galeria | Noël Raoul Bossart, MIT; zachowane nagłówki źródeł |
-| Load Awesome 1.1.0 | Daniel Cardoso, MIT; wyodrębniony CSS z zachowanym nagłówkiem |
-| Animate.css | Dan Eden; informacje o autorstwie/licencji w pliku źródłowym |
-| Pozostałe dodatki JS | WOW, enllax, scrollUp, easing, stickyNavbar, Waypoints, imagesLoaded i lightbox; informacje w nagłówkach plików w `static/js` |
-| Tailwind CSS | Narzędzie do budowania CSS; wersje zależności w `package-lock.json` |
-| Fonty, ikony, mapa | Google Fonts, Font Awesome, Google Maps; ładowane z usług zewnętrznych |
-| Zdjęcia, logo, regulaminy | Materiały strony Koła Fantastyki i Gier UW |
+| Featherlight 1.3.3 and gallery | Noël Raoul Bossart, MIT; original source headers retained |
+| Load Awesome 1.1.0 | Daniel Cardoso, MIT; extracted CSS with its original header retained |
+| Animate.css | Dan Eden; attribution and license information in the source file |
+| Other JavaScript plugins | WOW, enllax, scrollUp, easing, stickyNavbar, Waypoints, imagesLoaded and lightbox; credits in the source headers in `static/js` |
+| Tailwind CSS | CSS build tool; dependency versions recorded in `package-lock.json` |
+| Fonts, icons and map | Google Fonts, Font Awesome and Google Maps; loaded from external services |
+| Photos, logo and rules documents | Materials from the Koło Fantastyki i Gier UW website |
 
-Dodatek stickyNavbar dostosowano do jQuery 3, poprawiając selektor atrybutu
-oraz zastępując `load(handler)` wywołaniem `on('load', ...)`.
+The stickyNavbar plugin was adapted for jQuery 3 by fixing an attribute selector
+and replacing `load(handler)` with `on('load', ...)`.
 
-Biblioteki i materiały zewnętrzne zachowują własne warunki licencyjne.
+Third-party libraries and materials retain their own license terms.

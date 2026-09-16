@@ -337,9 +337,9 @@ section {
 
 #banner-container {
     display: flex;
-    justify-content: center; /* Centrowanie poziome */
-    align-items: center; /* Centrowanie pionowe */
-    height: 100%; /* Upewnia się, że kontener ma wysokość */
+    justify-content: center; /* Center horizontally. */
+    align-items: center; /* Center vertically. */
+    height: 100%; /* Fill the parent height. */
 }
 
 #banner-logo {
@@ -1601,7 +1601,7 @@ blockquote {
 
 }
 
-/*Dodatkowy kod*/
+/* Custom styles */
 h1.convention-name {
     font-family: 'Open Sans', sans-serif;
     font-size: 40px;
@@ -1701,7 +1701,7 @@ h2.convention-text:after {
         aspect-ratio: 1/1;
     }
 
-    /* Lightbox na telefonach */
+    /* Lightbox on mobile devices */
     .featherlight .featherlight-content {
         margin-left: 5px;
         margin-right: 5px;
@@ -1713,7 +1713,7 @@ h2.convention-text:after {
     }
 }
 
-/* Bardzo małe ekrany (mniejsze telefony) */
+/* Small phone screens */
 @media (max-width: 480px) {
     #gallery {
         grid-template-columns: repeat(2, 1fr);
@@ -1726,7 +1726,7 @@ h2.convention-text:after {
     }
 }
 
-/* Tablety pionowo */
+/* Tablets in portrait orientation */
 @media (min-width: 769px) and (max-width: 1024px) {
     #gallery {
         grid-template-columns: repeat(3, 1fr);
@@ -2081,7 +2081,7 @@ h2.convention-text:after {
     color: #111;
     display: block;
     margin: 0;
-    padding: 14px 0; /* Jak w h2 */
+    padding: 14px 0; /* Match the h2 padding. */
     line-height: normal;
     align-content: center;
     text-align: center;

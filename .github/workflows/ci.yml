@@ -81,5 +81,4 @@ jobs:
         run: >-
           docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.30.1
           dir /repo --config /repo/.gitleaks.toml --redact --no-banner
-      # Full history still contains a revoked-or-to-be-rotated legacy password.
-      # Scan history separately before rewriting it; do not suppress the finding.
+      # Scan the checked-out files, including changes introduced by pull requests.

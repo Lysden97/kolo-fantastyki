@@ -1,31 +1,33 @@
 # Koło Fantastyki i Gier UW
 
-Strona Koła Fantastyki i Gier Uniwersytetu Warszawskiego z informacjami o wydarzeniach i systemem bezpłatnych biletów. Uczestnik pobiera PDF z kodem QR, który obsługa sprawdza po zalogowaniu.
+A website for the University of Warsaw's fantasy and gaming club, with event information and a free ticket system. Visitors download a PDF ticket with a QR code that staff can verify after signing in.
 
-![Strona główna z przykładowym wydarzeniem](docs/screenshots/home.png)
+The application interface is in Polish, as it was built for a Polish university club.
 
-## Funkcje
+![Home page with a sample event](docs/screenshots/home.png)
 
-- Prezentacja koła, galeria zdjęć i regulaminy.
-- Zarządzanie wydarzeniami w panelu Django i odliczanie do ich rozpoczęcia.
-- Generowanie biletów PDF z kodem QR oraz weryfikacja przez obsługę.
-- Formularz kontaktowy z walidacją danych i limitem wysyłek.
+## Features
 
-## Technologie
+- Club information, photo gallery and event rules.
+- Event management through Django admin and a countdown to each event.
+- PDF tickets with QR codes and staff verification.
+- Contact form with input validation and a submission limit.
+
+## Technologies
 
 Python 3.13+ · Django 5.2 · PostgreSQL 17 · Docker Compose · Gunicorn · Nginx · Tailwind CSS · ReportLab · qrcode
 
-## Jak działają bilety
+## How tickets work
 
-Bilet otrzymuje losowy identyfikator i kod QR prowadzący do strony weryfikacji. Zalogowany pracownik sprawdza status i zatwierdza pierwsze użycie. Od tego momentu bilet jest ważny przez 48 godzin; ponowne zatwierdzenie nie przedłuża jego ważności.
+Each ticket receives a random identifier and a QR code linking to its verification page. A signed-in staff member checks the status and confirms its first use. The ticket is then valid for 48 hours; confirming it again does not extend that period.
 
-Generowanie PDF i zapis biletu odbywają się w jednej transakcji. Jeśli tworzenie dokumentu się nie powiedzie, zapis zostaje wycofany. Blokady PostgreSQL chronią limit pobrań i pierwsze zatwierdzenie przy równoczesnych żądaniach. Logika znajduje się w [website/services.py](website/services.py).
+PDF generation and ticket creation run in a single transaction. If document generation fails, the database changes are rolled back. PostgreSQL locks enforce the download limit and prevent duplicate first-use confirmations during concurrent requests. This logic lives in [website/services.py](website/services.py).
 
-Limit wynosi 2 bilety na adres IP w ciągu 30 dni — osoby korzystające ze wspólnej sieci współdzielą ten limit.
+Downloads are limited to 2 tickets per IP address over 30 days. Visitors sharing a public IP address also share this limit.
 
-## Uruchomienie lokalne
+## Running locally
 
-Wymagania: Docker z Compose v2 oraz Python 3.13+ do utworzenia konfiguracji.
+Requirements: Docker with Compose v2 and Python 3.13+ to create the configuration.
 
 ```bash
 git clone https://github.com/Lysden97/KoloFantastyki.git
@@ -36,30 +38,30 @@ docker compose exec django-web python manage.py seed_demo
 docker compose exec django-web python manage.py createsuperuser
 ```
 
-Na Windows można użyć `py` zamiast `python`. Skrypt tworzy `.env` z lokalną konfiguracją i losowymi sekretami. Dostępne ustawienia opisuje [.env.example](.env.example).
+On Windows, you can use `py` instead of `python`. The setup script creates a `.env` file with local settings and random secrets. See [.env.example](.env.example) for the available settings.
 
-Strona działa pod http://localhost:8001/, a panel administratora pod http://localhost:8001/k9xV7rB2pQzL/.
+The website runs at http://localhost:8001/ and the admin panel at http://localhost:8001/k9xV7rB2pQzL/.
 
-Polecenie `seed_demo` dodaje przykładowe wydarzenie. Migracje i budowanie plików statycznych wykonują się automatycznie. W lokalnej konfiguracji wiadomości z formularza kontaktowego są wypisywane w logach aplikacji.
+The `seed_demo` command adds a sample event. Migrations and static asset builds run automatically. In the local configuration, contact form messages are printed to the application logs.
 
-Aby sprawdzić cały proces, pobierz bilet ze strony głównej, zaloguj się do panelu utworzonym kontem i otwórz adres z kodu QR.
+To try the ticket flow, download a ticket from the home page, sign in to the admin panel with the account you created, and open the URL from the QR code.
 
-Zatrzymanie aplikacji z zachowaniem danych:
+To stop the application while keeping its data:
 
 ```bash
 docker compose down
 ```
 
-## Testy
+## Tests
 
-Po uruchomieniu kontenerów:
+With the containers running:
 
 ```bash
 docker compose exec -e TEST_POSTGRES=True django-web python manage.py test --settings=djangoKoloFantastyki.test_settings
 ```
 
-Testy obejmują generowanie PDF, uprawnienia, ważność biletów, formularz kontaktowy i limity przy równoczesnych żądaniach. Korzystają z osobnej bazy testowej PostgreSQL.
+Tests cover PDF generation, permissions, ticket validity, the contact form and limits under concurrent requests. They use a separate PostgreSQL test database.
 
-## Interfejs
+## Interface
 
-Strona wykorzystuje dostosowany szablon **Namari**. Autorzy bibliotek i informacje o zasobach są wymienieni w [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The website uses an adapted **Namari** template. Library authors and asset credits are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

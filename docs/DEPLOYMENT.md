@@ -1,54 +1,56 @@
-# Wdrożenie i aktualizacja
+# Deployment and updates
 
-Dostarczony Compose jest przeznaczony do lokalnego uruchomienia na 127.0.0.1:8001.
-Kontenery używają Gunicorna, ale proxy nie ma skonfigurowanego certyfikatu TLS.
+The supplied Compose configuration runs locally at 127.0.0.1:8001.
+The application uses Gunicorn, but the proxy has no TLS certificate configured.
 
-## Przed wdrożeniem
+## Before deployment
 
-1. Wykonaj kopię bazy i zweryfikuj możliwość odtworzenia.
-2. Wygeneruj nowe sekrety; historyczne hasło i SECRET_KEY traktuj jako ujawnione.
-3. Ustaw DEBUG=False, ALLOWED_HOSTS na właściwą domenę i CSRF_TRUSTED_ORIGINS na jej origin https://.
-4. Skonfiguruj TLS w Nginx, certyfikaty montowane tylko do odczytu i przekierowanie portu 80 na 443.
-5. Zachowaj nadpisywanie X-Forwarded-For i X-Forwarded-Proto. Port Gunicorna ma być osiągalny tylko przez zaufany proxy.
-6. Ustaw backend SMTP, nadawcę należącego do obsługiwanej domeny oraz CONTACT_RECIPIENT.
-7. Uruchom migracje na kopii bazy, następnie testy i kontrole wdrożenia.
+1. Back up the database and verify that it can be restored.
+2. Generate deployment-specific secrets for PostgreSQL and Django's `SECRET_KEY`.
+3. Set `DEBUG=False`, `ALLOWED_HOSTS` to your domain and `CSRF_TRUSTED_ORIGINS` to its HTTPS origin.
+4. Configure TLS in Nginx, mount certificates read-only and redirect port 80 to 443.
+5. Keep overwriting `X-Forwarded-For` and `X-Forwarded-Proto`. Only the trusted proxy should be able to reach Gunicorn.
+6. Configure the SMTP backend, a sender address on your mail domain and `CONTACT_RECIPIENT`.
+7. Run migrations against a copy of the database, then run tests and deployment checks.
 
 ```bash
 python manage.py check --deploy --fail-level WARNING
 ```
 
-HSTS obejmuje tylko daną domenę; includeSubDomains/preload nie są włączane automatycznie.
-Polecenie może zwrócić ostrzeżenia o tych opcjach — decyzję podejmuje administrator
-po sprawdzeniu wszystkich subdomen i warunków preload. Nie wyciszaj ich bez przeglądu.
+HSTS applies only to the configured domain; `includeSubDomains` and `preload` are
+not enabled automatically. The command may report warnings for these options.
+Review all subdomains and the preload requirements before enabling them.
 
-Jeżeli TLS kończy się na innym proxy przed Nginx, potrzebna jest osobna, świadomie
-skonfigurowana granica zaufania. Obecny Nginx nadpisuje protokół wartością własnego
-połączenia i nie należy bezwarunkowo przekazywać nagłówków od klienta.
+If TLS terminates at another proxy in front of Nginx, configure that trust boundary
+explicitly. The current Nginx configuration overwrites the forwarded protocol with
+its own connection scheme. Do not blindly forward headers supplied by clients.
 
-## Migracja z wcześniejszej wersji
+## Upgrading from an earlier version
 
-- Nie usuwaj wolumenu postgres_data; jego usunięcie oznacza utratę bazy.
-- Zachowaj dotychczasową nazwę bazy i użytkownika w DATABASE_NAME i DATABASE_USER.
-- Zmień hasło także w PostgreSQL, nie tylko w .env.
-- Migracja 0006 rozszerza identyfikator biletu bez zmiany wartości istniejących biletów,
-  dodaje logi kontaktu i indeksy.
-- Stare ośmioznakowe linki QR i dotychczasowy adres panelu pozostają dostępne.
-- Dane statyczne są teraz zapisywane w osobnym wolumenie staticfiles.
-- Sprawdź chronologię istniejących wydarzeń; walidacja dat obejmuje nowe edycje
-  formularzy, nie modyfikuje samoczynnie historycznych rekordów.
+- Keep the `postgres_data` volume; deleting it removes the database.
+- Preserve the existing database name and user in `DATABASE_NAME` and `DATABASE_USER`.
+- When rotating a password, update it in PostgreSQL as well as in `.env`.
+- Migration `0006` extends the ticket identifier field without changing existing
+  ticket values, and adds contact attempt logs and indexes.
+- Existing eight-character QR links and the original admin URL remain available.
+- Collected static files now use a separate `staticfiles` volume.
+- Check the dates of existing events. Date validation applies to new form submissions
+  and does not automatically change historical records.
 
-## Utrzymanie
+## Maintenance
 
-Compose uruchamia osobną usługę cleanup: czyszczenie po starcie oraz co 24 godziny.
-Alternatywnie scheduler hosta może wykonywać raz dziennie:
+Compose runs a separate `cleanup` service at startup and every 24 hours.
+Alternatively, a host scheduler can run this command once a day:
 
 ```bash
 python manage.py clean_old_ticket_logs
 ```
 
-Logi IP biletów są usuwane po 30 dniach, kontaktu po 1 dniu (z dokładnością harmonogramu).
-Bilety nie są usuwane przez to polecenie. Formularz ma limit 3 prób na godzinę,
-również gdy SMTP jest niedostępne. Nie zapisuje treści wiadomości w bazie.
+Ticket IP logs are deleted after 30 days and contact attempt logs after 1 day,
+subject to the cleanup schedule. This command does not delete tickets.
+The contact form allows 3 attempts per IP address per hour, including attempts
+made while SMTP is unavailable. Message content is not stored in the database.
 
-Utrzymuj kopie bazy, aktualizuj przypięte zależności, monitoruj logi i działanie cleanup.
-Nowe obrazy kontenerów oraz migracje przetestuj przed zmianą działającego wdrożenia.
+Maintain database backups, update pinned dependencies and monitor application logs
+and the `cleanup` service. Test new container images and migrations before updating
+a running deployment.
