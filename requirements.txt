@@ -6,7 +6,7 @@ pillow==12.3.0
 psycopg==3.3.5
 psycopg-binary==3.3.5
 qrcode==8.2
-reportlab==4.5.1
+reportlab==5.0.1
 asgiref==3.12.1
 sqlparse==0.6.0
 tzdata==2026.4
