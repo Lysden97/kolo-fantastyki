@@ -1,4 +1,4 @@
 -r requirements.txt
 ruff>=0.16.9,<1
 coverage>=7.10,<8
-pip-audit>=2.9,<3
+pip-audit>=2.10.1,<3
