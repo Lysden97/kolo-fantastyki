@@ -1,6 +1,6 @@
 # Application dependencies, including transitive dependencies.
 django-environ==0.14.0
-Django==6.1.1
+Django==6.1.2
 gunicorn==26.2.0
 pillow==13.0.0
 psycopg==3.3.5
